@@ -22,17 +22,18 @@ export default function CafeReservation() {
   )
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-start sm:p-24 p-4">
+    <main className="flex flex-col items-center justify-start min-h-screen sm:p-24 p-4">
+      <div className="flex flex-row items-center justify-center mb-4 gap-4">
+        <ThemeToggleButton />
+        <h1 className="font-semibold text-2xl">{SAMPLE_CAFE_NAME}</h1>
+      </div>
       {isLoading ? (
-        <div>Loading...</div>
+        <div className="text-center leading-8">
+          <div>예약 정보를 불러오는 중</div>
+          <div>문의: <SMSLink>{SAMPLE_CS_PHONE}</SMSLink></div>
+        </div>
       ) : (
-        <>
-          <div className="flex flex-row items-center justify-center mb-4 gap-4">
-            <ThemeToggleButton />
-            <h1 className="font-semibold text-2xl">{SAMPLE_CAFE_NAME}</h1>
-          </div>
-          {reservationArray && <ReservationTable reservationArray={reservationArray} />}
-        </>
+        <>{reservationArray && <ReservationTable reservationArray={reservationArray} />}</>
       )}
     </main>
   )
