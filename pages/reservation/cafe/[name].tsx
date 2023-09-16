@@ -9,7 +9,7 @@ import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
 const SAMPLE_CS_PHONE: string = '010-5397-8929'
-const SAMPLE_CAFE_NAME: string = '카페OGO'
+const SAMPLE_CAFE_NAME: string = '카페_오고'
 
 export default function CafeReservation() {
   const logger = getLogger()
