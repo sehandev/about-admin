@@ -1,6 +1,7 @@
 import useSWR from 'swr'
 
 import { Article } from '@api/blog'
+import { ThemeToggleButton } from '@components/theme-button'
 import { getLogger } from '@libs/logger'
 import { getSWRManager } from '@libs/swr'
 
@@ -28,6 +29,7 @@ export default function Home() {
       >
         테스트 버튼
       </button>
+      <ThemeToggleButton />
     </main>
   )
 }
