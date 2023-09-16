@@ -1,3 +1,3 @@
-export function timestampToDate(timestamp: number): string {
-  return '2023년 09월 16일'
+export function timestampToDate(timestamp: number): { date: string; hour: string } {
+  return { date: '9월 1일', hour: '5시 20분' }
 }
