@@ -15,9 +15,8 @@ export default function CafeReservation() {
   const logger = getLogger()
   const swrManager = getSWRManager()
   logger.log('CafeReservation', `visit`, { cafe_name: SAMPLE_CAFE_NAME })
-
   const { data: reservationArray, isLoading } = useSWR<Reservation[], Error>(
-    `/api/reservation/${SAMPLE_CAFE_NAME}`,
+    swrManager.convertAPI(`/admin/reservation/cafe/${SAMPLE_CAFE_NAME}`),
     swrManager.getFetcher(),
   )
 
@@ -30,7 +29,9 @@ export default function CafeReservation() {
       {isLoading ? (
         <div className="text-center leading-8">
           <div>예약 정보를 불러오는 중</div>
-          <div>문의: <SMSLink>{SAMPLE_CS_PHONE}</SMSLink></div>
+          <div>
+            문의: <SMSLink>{SAMPLE_CS_PHONE}</SMSLink>
+          </div>
         </div>
       ) : (
         <>{reservationArray && <ReservationTable reservationArray={reservationArray} />}</>
@@ -40,6 +41,11 @@ export default function CafeReservation() {
 }
 
 const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[] }) => {
+  function sortReservationArrayByTimestamp(a: Reservation, b: Reservation): number {
+    if (a.timestamp < b.timestamp) return -1
+    return 1
+  }
+
   return (
     <Table className="mx-auto min-w-max w-fit">
       <TableCaption className="my-4">
@@ -55,7 +61,7 @@ const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[
         </TableRow>
       </TableHeader>
       <TableBody>
-        {reservationArray.map((info, idx) => {
+        {reservationArray.sort(sortReservationArrayByTimestamp).map((info, idx) => {
           const { date, hour } = timestampToDate(info.timestamp)
           return (
             <TableRow key={`reservation-${idx}`}>
