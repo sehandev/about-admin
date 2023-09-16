@@ -1,12 +1,12 @@
 import useSWR from 'swr'
 
-import { Reservation } from '@api/reservation/[name]'
+import { SMSLink } from '@components/link'
 import { ThemeToggleButton } from '@components/theme-button'
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@components/ui/table'
 import { getLogger } from '@libs/logger'
 import { getSWRManager } from '@libs/swr'
 import { timestampToDate } from '@libs/timestamp'
-import { SMSLink } from '@components/link'
+import { Reservation } from '@type/reservation'
 
 const SAMPLE_CS_PHONE: string = '010-5397-8929'
 const SAMPLE_CAFE_NAME: string = '카페OGO'
