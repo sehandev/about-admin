@@ -5,9 +5,11 @@ import { MoonIcon, SunIcon } from '@radix-ui/react-icons'
 
 import { Button } from '@components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@components/ui/dropdown-menu'
+import { getLogger } from '@libs/logger'
 
 export function ThemeToggleButton() {
-  const { setTheme } = useTheme()
+  const logger = getLogger()
+  const { setTheme, theme } = useTheme()
 
   return (
     <DropdownMenu>
@@ -19,9 +21,30 @@ export function ThemeToggleButton() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem onClick={() => setTheme('light')}>Light</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('dark')}>Dark</DropdownMenuItem>
-        <DropdownMenuItem onClick={() => setTheme('system')}>System</DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            logger.log('theme-toggle', 'light', theme)
+            setTheme('light')
+          }}
+        >
+          Light
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            logger.log('theme-toggle', 'dark', theme)
+            setTheme('dark')
+          }}
+        >
+          Dark
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            logger.log('theme-toggle', 'system', theme)
+            setTheme('system')
+          }}
+        >
+          System
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )
