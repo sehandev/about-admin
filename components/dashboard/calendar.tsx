@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { FC, ReactNode, useMemo, useState } from 'react'
 
 import { CountByType, CountFilterDTO, CountTMPEnum, CountTypeEnum, DateCount } from '@libs/dashboard'
 import { getDateArrayFromTo } from '@libs/timestamp'
@@ -17,17 +17,39 @@ export function Calendar() {
   const dateArray = useMemo(() => getDateArrayFromTo({ start: START_DATE, end: END_DATE }), [])
 
   const DateHeader = () => {
-    return DATE_HEADER.map((date, idx) => <div key={`date-header-${idx}`}>{date}</div>)
+    return DATE_HEADER.map((date, idx) => (
+      <div key={`date-header-${idx}`} className="flex items-center justify-center w-4 h-4 text-sm">
+        {date}
+      </div>
+    ))
+  }
+
+  type DateCellProps = {
+    children: ReactNode
+  }
+  const DateCell = ({ children }: DateCellProps) => {
+    return <div className="flex items-center justify-center w-4 h-4 bg-green-300 text-sm text-black">{children}</div>
   }
 
   return (
     <>
-      <div className="grid grid-rows-7 grid-flow-col gap-4">
-        <DateHeader />
-        <div>0</div>
-        {/* TODO: date array */}
+      <div className="flex gap-2">
+        <div>_</div>
+        <div>1월</div>
+        <div>_</div>
+        <div>_</div>
+        <div>_</div>
+        <div>_</div>
+        <div>2월</div>
       </div>
-      <div className="flex gap-4">
+      <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-2">
+        <DateHeader />
+        {/* TODO: DateCell array */}
+        <DateCell>3</DateCell>
+        <DateCell>4</DateCell>
+        <DateCell>5</DateCell>
+      </div>
+      <div className="flex gap-2">
         {dateArray.map((date: string, idx: number) => {
           let totalCount: number = 0
           if (data.hasOwnProperty(date)) {
