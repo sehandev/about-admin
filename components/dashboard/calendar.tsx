@@ -25,10 +25,10 @@ export function Calendar() {
   }
 
   type DateCellProps = {
-    children: ReactNode
+    count: number
   }
-  const DateCell = ({ children }: DateCellProps) => {
-    return <div className="flex items-center justify-center w-4 h-4 bg-green-300 text-sm text-black">{children}</div>
+  const DateCell = ({ count }: DateCellProps) => {
+    return <div className="flex items-center justify-center w-4 h-4 bg-green-300 text-sm text-black">{count}</div>
   }
 
   return (
@@ -45,9 +45,9 @@ export function Calendar() {
       <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-2">
         <DateHeader />
         {/* TODO: DateCell array */}
-        <DateCell>3</DateCell>
-        <DateCell>4</DateCell>
-        <DateCell>5</DateCell>
+        <DateCell count={2} />
+        <DateCell count={3} />
+        <DateCell count={5} />
       </div>
       <div className="flex gap-2">
         {dateArray.map((date: string, idx: number) => {
