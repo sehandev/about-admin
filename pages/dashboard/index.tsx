@@ -1,3 +1,4 @@
+import { Calendar } from '@components/dashboard/calendar'
 import { DashboardNavBar as NavBar } from '@components/dashboard/nav-bar'
 import { ThemeToggleButton } from '@components/theme-button'
 import { getLogger } from '@libs/logger'
@@ -14,6 +15,7 @@ export default function Dashboard() {
       <ThemeToggleButton />
       <NavBar />
       <div>{key}</div>
+      <Calendar />
     </main>
   )
 }
