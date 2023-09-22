@@ -17,11 +17,9 @@ export function Calendar() {
     tmp: [CountTMPEnum.Match, CountTMPEnum.Reservation],
     type: [CountTypeEnum.Dark, CountTypeEnum.Cafe],
   })
-
-  const dateArray: string[] = useMemo(() => getDateArrayFromXToNow(), [])
-  const startDay: number = useMemo(() => moment(START_DATE).day(), [])
-
   const [fromDate, setFromDate] = useState<Date>()
+  const dateArray: string[] = useMemo(() => getDateArrayFromXToNow(fromDate), [fromDate])
+  const startDay: number = useMemo(() => moment(fromDate).day(), [fromDate])
 
   return (
     <>
@@ -66,8 +64,10 @@ function calculateTotalCount({ dateCount, filter }: { dateCount: DateCount; filt
   return typeCount
 }
 
-function getDateArrayFromXToNow() {
-  return getDateArrayFromTo({ start: START_DATE, end: moment().format('YYYY-MM-DD') })
+function getDateArrayFromXToNow(fromDate: Date | undefined) {
+  const startDate: string = fromDate ? moment(fromDate).format('YYYY-MM-DD') : moment(START_DATE).format('YYYY-MM-DD')
+  const endDate: string = moment().format('YYYY-MM-DD')
+  return getDateArrayFromTo({ start: startDate, end: endDate })
 }
 
 function getBGByCount(count: number) {
