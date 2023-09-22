@@ -18,7 +18,11 @@ export function timestampToDate(timestamp: number): { date: string; hour: string
   return { date: `${month} ${day}`, hour: hour }
 }
 
-export function getDateArrayFromTo({ start, end }: { start: string; end: string }): string[] {
+interface getDateArrayFromToInterface {
+  start: string
+  end: string
+}
+export function getDateArrayFromTo({ start, end }: getDateArrayFromToInterface): string[] {
   // start, end: YYYY-MM-DD
   const dateArray: string[] = []
 
@@ -32,4 +36,14 @@ export function getDateArrayFromTo({ start, end }: { start: string; end: string 
   }
 
   return dateArray
+}
+
+interface getDateArrayFromToDateInterface {
+  fromDate: Date
+  toDate: Date
+}
+export function getDateArrayFromToDate({ fromDate, toDate }: getDateArrayFromToDateInterface): string[] {
+  const start: string = moment(fromDate).format('YYYY-MM-DD')
+  const end: string = moment(toDate).format('YYYY-MM-DD')
+  return getDateArrayFromTo({ start, end })
 }
