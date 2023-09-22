@@ -19,18 +19,26 @@ export function Calendar() {
   })
   const [fromDate, setFromDate] = useState<Date>()
   const dateArray: string[] = useMemo(() => getDateArrayFromXToNow(fromDate), [fromDate])
-  const startDay: number = useMemo(() => moment(fromDate).day(), [fromDate])
+  const startDay: number = useMemo(() => (fromDate ? moment(fromDate).day() : moment(START_DATE).day()), [fromDate])
 
   return (
     <>
-      <div>
+      <div className="flex gap-4">
         <DatePicker date={fromDate} setDate={setFromDate} placeholder="시작 날짜 변경" />
+        {/* TODO: 종료날짜 toDate */}
+        <DatePicker date={fromDate} setDate={setFromDate} placeholder="종료 날짜 변경" />
       </div>
-      <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
-        <DayHeader startDay={startDay} />
-        {dateArray.map((date: string, idx: number) => {
-          return <DateCell key={`date-cell-${idx}`} countData={data} countFilter={countFilter} date={date} />
-        })}
+      <div className="flex gap-4">
+        <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
+          <DayHeader startDay={startDay} />
+        </div>
+
+        {/* TODO: scrollbar style */}
+        <div className="grid grid-rows-7 grid-flow-col items-center justify-center max-w-4xl overflow-x-auto gap-1">
+          {dateArray.map((date: string, idx: number) => {
+            return <DateCell key={`date-cell-${idx}`} countData={data} countFilter={countFilter} date={date} />
+          })}
+        </div>
       </div>
     </>
   )
@@ -117,7 +125,9 @@ const DateCell = ({ countData, countFilter, date }: DateCellProps) => {
           <div className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}></div>
         </TooltipTrigger>
         <TooltipContent>
-          <p>Date: {date}</p>
+          <p>
+            {date} {DAY_HEADER[moment(date).day()]}요일
+          </p>
           {isActive && dateCount && (
             <>
               <p>Match dark: {dateCount.matchCount.dark}</p>
