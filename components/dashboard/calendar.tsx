@@ -6,7 +6,6 @@ import { getDateArrayFromTo } from '@libs/timestamp'
 import { cn } from '@libs/utils'
 
 const START_DATE = '2023-01-01' // TODO:
-const END_DATE = '2023-12-31' // TODO:
 const MAX_COUNT = 100 // TODO:
 const DAY_HEADER = ['일', '월', '화', '수', '목', '금', '토', '일', '월', '화', '수', '목', '금', '토']
 
@@ -17,7 +16,7 @@ export function Calendar() {
     type: [CountTypeEnum.Dark, CountTypeEnum.Cafe],
   })
 
-  const dateArray: string[] = useMemo(() => getDateArrayFromTo({ start: START_DATE, end: END_DATE }), [])
+  const dateArray: string[] = useMemo(() => getDateArrayFromXToNow(), [])
   const startDay: number = useMemo(() => moment(START_DATE).day(), [])
 
   const DayHeader = () => {
@@ -109,6 +108,10 @@ function calculateTotalCount({ dateCount, filter }: { dateCount: DateCount; filt
       return a + b
     })
   return typeCount
+}
+
+function getDateArrayFromXToNow() {
+  return getDateArrayFromTo({ start: START_DATE, end: moment().format('YYYY-MM-DD') })
 }
 
 interface DateObject {
