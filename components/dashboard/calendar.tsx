@@ -1,3 +1,4 @@
+import moment from 'moment'
 import { useMemo, useState } from 'react'
 
 import { CountByType, CountFilterDTO, CountTMPEnum, CountTypeEnum, DateCount } from '@libs/dashboard'
@@ -7,7 +8,7 @@ import { cn } from '@libs/utils'
 const START_DATE = '2023-01-01' // TODO:
 const END_DATE = '2023-12-31' // TODO:
 const MAX_COUNT = 100 // TODO:
-const DATE_HEADER = ['월', '화', '수', '목', '금', '토', '일']
+const DAY_HEADER = ['일', '월', '화', '수', '목', '금', '토', '일', '월', '화', '수', '목', '금', '토']
 
 export function Calendar() {
   const [data, _] = useState(SAMPLE_DATA)
@@ -16,10 +17,11 @@ export function Calendar() {
     type: [CountTypeEnum.Dark, CountTypeEnum.Cafe],
   })
 
-  const dateArray = useMemo(() => getDateArrayFromTo({ start: START_DATE, end: END_DATE }), [])
+  const dateArray: string[] = useMemo(() => getDateArrayFromTo({ start: START_DATE, end: END_DATE }), [])
+  const startDay: number = useMemo(() => moment(START_DATE).day(), [])
 
-  const DateHeader = () => {
-    return DATE_HEADER.map((date, idx) => (
+  const DayHeader = () => {
+    return DAY_HEADER.slice(startDay, startDay + 7).map((date, idx) => (
       <div key={`date-header-${idx}`} className="flex items-center justify-center w-4 h-4 text-sm">
         {date}
       </div>
@@ -50,7 +52,7 @@ export function Calendar() {
         case 1:
           return 'bg-green-800'
         default:
-          return 'bg-green-900'
+          return 'bg-[#161b22]'
       }
     }
 
@@ -63,24 +65,8 @@ export function Calendar() {
 
   return (
     <>
-      <div className="flex gap-1">
-        <div>_</div>
-        <div>1월</div>
-        <div>_</div>
-        <div>_</div>
-        <div>_</div>
-        <div>_</div>
-        <div>2월</div>
-      </div>
       <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
-        <DateHeader />
-        {/* TODO: DateCell array */}
-        <DateCell count={24} />
-        <DateCell count={25} />
-        <DateCell count={26} />
-        <DateCell count={95} />
-      </div>
-      <div className="flex gap-1">
+        <DayHeader />
         {dateArray.map((date: string, idx: number) => {
           let totalCount: number = 0
           if (data.hasOwnProperty(date)) {
@@ -89,12 +75,8 @@ export function Calendar() {
               dateCount: dateCount,
               filter: countFilter,
             })
-            return (
-              <ol key={`calendar-data-${idx}`} className="bg-gray-700 my-4">
-                {date} - {totalCount}
-              </ol>
-            )
           }
+          return <DateCell key={`date-cell-${idx}`} count={totalCount} />
         })}
       </div>
     </>
@@ -139,15 +121,35 @@ const SAMPLE_DATA: DateObject = {
     matchCount: new CountByType({ dark: 4 }),
   }),
   '2023-08-04': new DateCount({
-    reservationCount: new CountByType({ cafe: 8 }),
+    reservationCount: new CountByType({ cafe: 18 }),
     matchCount: new CountByType({ dark: 2 }),
   }),
   '2023-08-05': new DateCount({
-    reservationCount: new CountByType({ cafe: 3 }),
-    matchCount: new CountByType({ dark: 3 }),
+    reservationCount: new CountByType({ cafe: 13 }),
+    matchCount: new CountByType({ dark: 13 }),
   }),
   '2023-08-08': new DateCount({
-    reservationCount: new CountByType({ cafe: 1 }),
-    matchCount: new CountByType({ dark: 9 }),
+    reservationCount: new CountByType({ cafe: 21 }),
+    matchCount: new CountByType({ dark: 19 }),
+  }),
+  '2023-08-11': new DateCount({
+    reservationCount: new CountByType({ cafe: 34 }),
+    matchCount: new CountByType({ dark: 20 }),
+  }),
+  '2023-08-12': new DateCount({
+    reservationCount: new CountByType({ cafe: 38 }),
+    matchCount: new CountByType({ dark: 20 }),
+  }),
+  '2023-08-14': new DateCount({
+    reservationCount: new CountByType({ cafe: 38 }),
+    matchCount: new CountByType({ dark: 30 }),
+  }),
+  '2023-08-16': new DateCount({
+    reservationCount: new CountByType({ cafe: 38 }),
+    matchCount: new CountByType({ dark: 40 }),
+  }),
+  '2023-08-18': new DateCount({
+    reservationCount: new CountByType({ cafe: 38 }),
+    matchCount: new CountByType({ dark: 50 }),
   }),
 }
