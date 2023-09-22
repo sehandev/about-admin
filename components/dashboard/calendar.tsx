@@ -125,11 +125,11 @@ function getBGByCount(count: number) {
       return 'bg-green-600'
     case 4:
     case 3:
-      return 'bg-green-600'
-    case 2:
       return 'bg-green-700'
-    case 1:
+    case 2:
       return 'bg-green-800'
+    case 1:
+      return 'bg-green-900'
     default:
       return 'bg-[#161b22]'
   }
