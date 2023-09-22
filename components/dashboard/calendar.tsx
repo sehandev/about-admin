@@ -5,6 +5,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@compo
 import { CountByType, CountFilterDTO, CountTMPEnum, CountTypeEnum, DateCount } from '@libs/dashboard'
 import { getDateArrayFromTo } from '@libs/timestamp'
 import { cn } from '@libs/utils'
+import { DatePicker } from '@components/date-picker'
 
 const START_DATE = '2023-01-01' // TODO:
 const MAX_COUNT = 100 // TODO:
@@ -28,51 +29,17 @@ export function Calendar() {
     ))
   }
 
-  type DateCellProps = {
-    date: string
-  }
-  const DateCell = ({ date }: DateCellProps) => {
-    const isActive = data.hasOwnProperty(date)
-    let count: number = 0
-    let dateCount: DateCount | null = null
-    if (isActive) {
-      dateCount = data[date]
-      count = calculateTotalCount({
-        dateCount: dateCount,
-        filter: countFilter,
-      })
-    }
-    return (
-      <TooltipProvider delayDuration={300}>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <div
-              className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}
-            ></div>
-          </TooltipTrigger>
-          <TooltipContent>
-            <p>Date: {date}</p>
-            {isActive && dateCount && (
-              <>
-                <p>Match dark: {dateCount.matchCount.dark}</p>
-                <p>Match cafe: {dateCount.matchCount.cafe}</p>
-                <p>Reservation dark: {dateCount.reservationCount.dark}</p>
-                <p>Reservation cafe: {dateCount.reservationCount.cafe}</p>
-                <p>Total count: {count}</p>
-              </>
-            )}
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    )
-  }
+  const [fromDate, setFromDate] = useState<Date>()
 
   return (
     <>
+      <div>
+        <DatePicker date={fromDate} setDate={setFromDate} />
+      </div>
       <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
         <DayHeader />
         {dateArray.map((date: string, idx: number) => {
-          return <DateCell key={`date-cell-${idx}`} date={date} />
+          return <DateCell key={`date-cell-${idx}`} countData={data} countFilter={countFilter} date={date} />
         })}
       </div>
     </>
@@ -133,6 +100,45 @@ function getBGByCount(count: number) {
     default:
       return 'bg-[#161b22]'
   }
+}
+
+type DateCellProps = {
+  countData: DateObject
+  countFilter: CountFilterDTO
+  date: string
+}
+const DateCell = ({ countData, countFilter, date }: DateCellProps) => {
+  const isActive = countData.hasOwnProperty(date)
+  let count: number = 0
+  let dateCount: DateCount | null = null
+  if (isActive) {
+    dateCount = countData[date]
+    count = calculateTotalCount({
+      dateCount: dateCount,
+      filter: countFilter,
+    })
+  }
+  return (
+    <TooltipProvider delayDuration={300}>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <div className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}></div>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Date: {date}</p>
+          {isActive && dateCount && (
+            <>
+              <p>Match dark: {dateCount.matchCount.dark}</p>
+              <p>Match cafe: {dateCount.matchCount.cafe}</p>
+              <p>Reservation dark: {dateCount.reservationCount.dark}</p>
+              <p>Reservation cafe: {dateCount.reservationCount.cafe}</p>
+              <p>Total count: {count}</p>
+            </>
+          )}
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+  )
 }
 
 interface DateObject {
