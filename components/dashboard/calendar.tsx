@@ -115,6 +115,7 @@ interface DateObject {
   [index: string]: DateCount
 }
 
+// TODO:
 const SAMPLE_DATA: DateObject = {
   '2023-08-01': new DateCount({
     reservationCount: new CountByType({ cafe: 6 }),
