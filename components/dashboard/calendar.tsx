@@ -1,6 +1,7 @@
 import moment from 'moment'
 import { useMemo, useState } from 'react'
 
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@components/ui/tooltip'
 import { CountByType, CountFilterDTO, CountTMPEnum, CountTypeEnum, DateCount } from '@libs/dashboard'
 import { getDateArrayFromTo } from '@libs/timestamp'
 import { cn } from '@libs/utils'
@@ -28,28 +29,50 @@ export function Calendar() {
   }
 
   type DateCellProps = {
-    count: number
+    date: string
   }
-  const DateCell = ({ count }: DateCellProps) => (
-    <div className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}>
-      {count}
-    </div>
-  )
+  const DateCell = ({ date }: DateCellProps) => {
+    const isActive = data.hasOwnProperty(date)
+    let count: number = 0
+    let dateCount: DateCount | null = null
+    if (isActive) {
+      dateCount = data[date]
+      count = calculateTotalCount({
+        dateCount: dateCount,
+        filter: countFilter,
+      })
+    }
+    return (
+      <TooltipProvider delayDuration={300}>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <div
+              className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}
+            ></div>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Date: {date}</p>
+            {isActive && dateCount && (
+              <>
+                <p>Match dark: {dateCount.matchCount.dark}</p>
+                <p>Match cafe: {dateCount.matchCount.cafe}</p>
+                <p>Reservation dark: {dateCount.reservationCount.dark}</p>
+                <p>Reservation cafe: {dateCount.reservationCount.cafe}</p>
+                <p>Total count: {count}</p>
+              </>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    )
+  }
 
   return (
     <>
       <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
         <DayHeader />
         {dateArray.map((date: string, idx: number) => {
-          let totalCount: number = 0
-          if (data.hasOwnProperty(date)) {
-            const dateCount = data[date]
-            totalCount = calculateTotalCount({
-              dateCount: dateCount,
-              filter: countFilter,
-            })
-          }
-          return <DateCell key={`date-cell-${idx}`} count={totalCount} />
+          return <DateCell key={`date-cell-${idx}`} date={date} />
         })}
       </div>
     </>
