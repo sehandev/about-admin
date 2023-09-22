@@ -24,7 +24,7 @@ export function Calendar() {
   return (
     <>
       <div>
-        <DatePicker date={fromDate} setDate={setFromDate} />
+        <DatePicker date={fromDate} setDate={setFromDate} placeholder="시작 날짜 변경" />
       </div>
       <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
         <DayHeader startDay={startDay} />
