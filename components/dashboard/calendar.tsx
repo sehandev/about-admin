@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react'
 
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@components/ui/tooltip'
 import { CountByType, CountFilterDTO, CountTMPEnum, CountTypeEnum, DateCount } from '@libs/dashboard'
-import { getDateArrayFromTo } from '@libs/timestamp'
+import { getDateArrayFromTo, getDateArrayFromToDate } from '@libs/timestamp'
 import { cn } from '@libs/utils'
 import { DatePicker } from '@components/date-picker'
 
@@ -18,15 +18,24 @@ export function Calendar() {
     type: [CountTypeEnum.Dark, CountTypeEnum.Cafe],
   })
   const [fromDate, setFromDate] = useState<Date>()
-  const dateArray: string[] = useMemo(() => getDateArrayFromXToNow(fromDate), [fromDate])
+  const [toDate, setToDate] = useState<Date>()
+  const dateArray: string[] = useMemo(() => {
+    if (fromDate) {
+      if (toDate) {
+        return getDateArrayFromToDate({ fromDate, toDate })
+      }
+      return getDateArrayFromXToNow(fromDate)
+    }
+    if (toDate) return getDateArrayFromToDate({ fromDate: new Date(START_DATE), toDate })
+    return getDateArrayFromXToNow(undefined)
+  }, [fromDate, toDate])
   const startDay: number = useMemo(() => (fromDate ? moment(fromDate).day() : moment(START_DATE).day()), [fromDate])
 
   return (
     <>
       <div className="flex gap-4">
         <DatePicker date={fromDate} setDate={setFromDate} placeholder="시작 날짜 변경" />
-        {/* TODO: 종료날짜 toDate */}
-        <DatePicker date={fromDate} setDate={setFromDate} placeholder="종료 날짜 변경" />
+        <DatePicker date={toDate} setDate={setToDate} placeholder="종료 날짜 변경" />
       </div>
       <div className="flex gap-4">
         <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
