@@ -1,10 +1,12 @@
-import { FC, ReactNode, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 
 import { CountByType, CountFilterDTO, CountTMPEnum, CountTypeEnum, DateCount } from '@libs/dashboard'
 import { getDateArrayFromTo } from '@libs/timestamp'
+import { cn } from '@libs/utils'
 
-const START_DATE = '2023-01-01'
-const END_DATE = '2023-12-31'
+const START_DATE = '2023-01-01' // TODO:
+const END_DATE = '2023-12-31' // TODO:
+const MAX_COUNT = 100 // TODO:
 const DATE_HEADER = ['월', '화', '수', '목', '금', '토', '일']
 
 export function Calendar() {
@@ -28,12 +30,40 @@ export function Calendar() {
     count: number
   }
   const DateCell = ({ count }: DateCellProps) => {
-    return <div className="flex items-center justify-center w-4 h-4 bg-green-300 text-sm text-black">{count}</div>
+    function getBGByCount(count: number) {
+      const level = Math.round((count / MAX_COUNT) * 10)
+      switch (level) {
+        case 10:
+        case 9:
+          return 'bg-green-400'
+        case 8:
+        case 7:
+          return 'bg-green-500'
+        case 6:
+        case 5:
+          return 'bg-green-600'
+        case 4:
+        case 3:
+          return 'bg-green-600'
+        case 2:
+          return 'bg-green-700'
+        case 1:
+          return 'bg-green-800'
+        default:
+          return 'bg-green-900'
+      }
+    }
+
+    return (
+      <div className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}>
+        {count}
+      </div>
+    )
   }
 
   return (
     <>
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <div>_</div>
         <div>1월</div>
         <div>_</div>
@@ -42,14 +72,15 @@ export function Calendar() {
         <div>_</div>
         <div>2월</div>
       </div>
-      <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-2">
+      <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
         <DateHeader />
         {/* TODO: DateCell array */}
-        <DateCell count={2} />
-        <DateCell count={3} />
-        <DateCell count={5} />
+        <DateCell count={24} />
+        <DateCell count={25} />
+        <DateCell count={26} />
+        <DateCell count={95} />
       </div>
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         {dateArray.map((date: string, idx: number) => {
           let totalCount: number = 0
           if (data.hasOwnProperty(date)) {
