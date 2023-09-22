@@ -21,14 +21,6 @@ export function Calendar() {
   const dateArray: string[] = useMemo(() => getDateArrayFromXToNow(), [])
   const startDay: number = useMemo(() => moment(START_DATE).day(), [])
 
-  const DayHeader = () => {
-    return DAY_HEADER.slice(startDay, startDay + 7).map((date, idx) => (
-      <div key={`date-header-${idx}`} className="flex items-center justify-center w-4 h-4 text-sm">
-        {date}
-      </div>
-    ))
-  }
-
   const [fromDate, setFromDate] = useState<Date>()
 
   return (
@@ -37,7 +29,7 @@ export function Calendar() {
         <DatePicker date={fromDate} setDate={setFromDate} />
       </div>
       <div className="grid grid-rows-7 grid-flow-col items-center justify-center gap-1">
-        <DayHeader />
+        <DayHeader startDay={startDay} />
         {dateArray.map((date: string, idx: number) => {
           return <DateCell key={`date-cell-${idx}`} countData={data} countFilter={countFilter} date={date} />
         })}
@@ -139,6 +131,17 @@ const DateCell = ({ countData, countFilter, date }: DateCellProps) => {
       </Tooltip>
     </TooltipProvider>
   )
+}
+
+interface DayHeaderType {
+  startDay: number
+}
+const DayHeader = ({ startDay }: DayHeaderType) => {
+  return DAY_HEADER.slice(startDay, startDay + 7).map((date, idx) => (
+    <div key={`date-header-${idx}`} className="flex items-center justify-center w-4 h-4 text-sm">
+      {date}
+    </div>
+  ))
 }
 
 interface DateObject {
