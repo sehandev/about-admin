@@ -30,37 +30,11 @@ export function Calendar() {
   type DateCellProps = {
     count: number
   }
-  const DateCell = ({ count }: DateCellProps) => {
-    function getBGByCount(count: number) {
-      const level = Math.round((count / MAX_COUNT) * 10)
-      switch (level) {
-        case 10:
-        case 9:
-          return 'bg-green-400'
-        case 8:
-        case 7:
-          return 'bg-green-500'
-        case 6:
-        case 5:
-          return 'bg-green-600'
-        case 4:
-        case 3:
-          return 'bg-green-600'
-        case 2:
-          return 'bg-green-700'
-        case 1:
-          return 'bg-green-800'
-        default:
-          return 'bg-[#161b22]'
-      }
-    }
-
-    return (
-      <div className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}>
-        {count}
-      </div>
-    )
-  }
+  const DateCell = ({ count }: DateCellProps) => (
+    <div className={cn('flex items-center justify-center w-4 h-4 text-sm text-black', getBGByCount(count))}>
+      {count}
+    </div>
+  )
 
   return (
     <>
@@ -112,6 +86,30 @@ function calculateTotalCount({ dateCount, filter }: { dateCount: DateCount; filt
 
 function getDateArrayFromXToNow() {
   return getDateArrayFromTo({ start: START_DATE, end: moment().format('YYYY-MM-DD') })
+}
+
+function getBGByCount(count: number) {
+  const level = Math.round((count / MAX_COUNT) * 10)
+  switch (level) {
+    case 10:
+    case 9:
+      return 'bg-green-400'
+    case 8:
+    case 7:
+      return 'bg-green-500'
+    case 6:
+    case 5:
+      return 'bg-green-600'
+    case 4:
+    case 3:
+      return 'bg-green-600'
+    case 2:
+      return 'bg-green-700'
+    case 1:
+      return 'bg-green-800'
+    default:
+      return 'bg-[#161b22]'
+  }
 }
 
 interface DateObject {
