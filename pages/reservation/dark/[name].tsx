@@ -71,10 +71,10 @@ const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[
                 {info.count}:{info.count}
               </TableCell>
               <TableCell className="text-center">
-                <SMSLink>{info.phone.male}</SMSLink>
+                <SMSLink>{changePhoneString(info.phone.male)}</SMSLink>
               </TableCell>
               <TableCell className="text-center">
-                <SMSLink>{info.phone.female}</SMSLink>
+                <SMSLink>{changePhoneString(info.phone.female)}</SMSLink>
               </TableCell>
             </TableRow>
           )
@@ -82,4 +82,11 @@ const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[
       </TableBody>
     </Table>
   )
+}
+
+function changePhoneString(phone: string): string {
+  if (phone.includes('_couple')) return phone.split('_couple')[0]
+  if (phone.includes('blog')) return '블로그 체험단'
+  if (phone.includes('_won')) return '커플 데이트'
+  return phone
 }
