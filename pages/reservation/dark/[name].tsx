@@ -8,15 +8,15 @@ import { getSWRManager } from '@libs/swr'
 import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
-const SAMPLE_CS_PHONE: string = '010-5397-8929'
-const SAMPLE_CAFE_NAME: string = '카페_오고'
+const SAMPLE_CS_PHONE: string = '010-5140-7750'
+const SAMPLE_DARK_NAME: string = '서울대입구점'
 
-export default function CafeReservation() {
+export default function DarkReservation() {
   const logger = getLogger()
   const swrManager = getSWRManager()
-  logger.log('CafeReservation', `visit`, { cafe_name: SAMPLE_CAFE_NAME })
+  logger.log('DarkReservation', `visit`, { store_name: SAMPLE_DARK_NAME })
   const { data: reservationArray, isLoading } = useSWR<Reservation[], Error>(
-    swrManager.convertAPI(`/admin/reservation/cafe/${SAMPLE_CAFE_NAME}`),
+    swrManager.convertAPI(`/admin/reservation/dark/${SAMPLE_DARK_NAME}`),
     swrManager.getFetcher(),
   )
 
@@ -24,7 +24,7 @@ export default function CafeReservation() {
     <main className="flex flex-col items-center justify-start min-h-screen sm:p-24 p-4">
       <div className="flex flex-row items-center justify-center mb-4 gap-4">
         <ThemeToggleButton />
-        <h1 className="font-semibold text-2xl">{SAMPLE_CAFE_NAME}</h1>
+        <h1 className="font-semibold text-2xl">{SAMPLE_DARK_NAME}</h1>
       </div>
       {isLoading ? (
         <div className="text-center leading-8">
