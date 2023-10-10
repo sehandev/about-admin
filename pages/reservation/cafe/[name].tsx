@@ -9,14 +9,14 @@ import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
 const SAMPLE_CS_PHONE: string = '010-5397-8929'
-const SAMPLE_CAFE_NAME: string = '카페_오고'
+const SAMPLE_CAFE_NAME: string = 'CAFE_OGO'
 
 export default function CafeReservation() {
   const logger = getLogger()
   const swrManager = getSWRManager()
   logger.log('CafeReservation', `visit`, { cafe_name: SAMPLE_CAFE_NAME })
   const { data: reservationArray, isLoading } = useSWR<Reservation[], Error>(
-    swrManager.convertAPI(`/admin/reservation/cafe/${SAMPLE_CAFE_NAME}`),
+    swrManager.convertAPI(`/admin/reservation/cafe/${SAMPLE_CAFE_NAME}?offset=0&limit=100`),
     swrManager.getFetcher(),
   )
 
@@ -71,10 +71,20 @@ const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[
                 {info.count}:{info.count}
               </TableCell>
               <TableCell className="text-center">
-                <SMSLink>{info.phone.male}</SMSLink>
+                {info.phone.male.map((phone, idx) => (
+                  <>
+                    <SMSLink key={`male-sms-link-${idx}`}>{phone}</SMSLink>
+                    <br />
+                  </>
+                ))}
               </TableCell>
               <TableCell className="text-center">
-                <SMSLink>{info.phone.female}</SMSLink>
+                {info.phone.female.map((phone, idx) => (
+                  <>
+                    <SMSLink key={`female-sms-link-${idx}`}>{phone}</SMSLink>
+                    <br />
+                  </>
+                ))}
               </TableCell>
             </TableRow>
           )

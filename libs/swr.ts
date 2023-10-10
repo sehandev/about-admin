@@ -13,7 +13,7 @@ export class SWRManager {
     this.logger = getLogger()
     this.logger.log('SWRManager', 'constructor')
     this.fetcher = (...args) => fetch(...args).then((res) => res.json())
-    this.externURI = 'http://admin-api.aboutmeeting.co.kr'
+    this.externURI = 'http://admin-api.aboutmeeting.co.kr/v1'
   }
 
   log(message: string, data?: any): void {

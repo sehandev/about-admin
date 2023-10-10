@@ -9,14 +9,14 @@ import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
 const SAMPLE_CS_PHONE: string = '010-5140-7750'
-const SAMPLE_DARK_NAME: string = '서울대입구점'
+const SAMPLE_DARK_NAME: string = 'SEOULUNIV_ABOUTMEETING'
 
 export default function DarkReservation() {
   const logger = getLogger()
   const swrManager = getSWRManager()
   logger.log('DarkReservation', `visit`, { store_name: SAMPLE_DARK_NAME })
   const { data: reservationArray, isLoading } = useSWR<Reservation[], Error>(
-    swrManager.convertAPI(`/admin/reservation/dark/${SAMPLE_DARK_NAME}`),
+    swrManager.convertAPI(`/admin/reservation/dark/${SAMPLE_DARK_NAME}?offset=0&limit=100`),
     swrManager.getFetcher(),
   )
 
@@ -71,10 +71,20 @@ const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[
                 {info.count}:{info.count}
               </TableCell>
               <TableCell className="text-center">
-                <SMSLink>{changePhoneString(info.phone.male)}</SMSLink>
+                {info.phone.male.map((phone, idx) => (
+                  <div key={`male-sms-link-${idx}`}>
+                    <SMSLink>{changePhoneString(phone)}</SMSLink>
+                    <br />
+                  </div>
+                ))}
               </TableCell>
               <TableCell className="text-center">
-                <SMSLink>{changePhoneString(info.phone.female)}</SMSLink>
+                {info.phone.female.map((phone, idx) => (
+                  <div key={`female-sms-link-${idx}`}>
+                    <SMSLink>{changePhoneString(phone)}</SMSLink>
+                    <br />
+                  </div>
+                ))}
               </TableCell>
             </TableRow>
           )
