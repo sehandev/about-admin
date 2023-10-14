@@ -1,11 +1,33 @@
 import { ReactNode } from 'react'
 
 import { SMSLink } from '@components/link'
-import { TableCell, TableHead, TableRow } from '@components/ui/table'
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@components/ui/table'
 import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
-export function ReservationTableHeaderRow() {
+interface ReservationTableType {
+  reservationArray: Reservation[]
+  csPhone: string
+}
+export function ReservationTable({ reservationArray, csPhone }: ReservationTableType) {
+  return (
+    <Table className="mx-auto min-w-max w-fit">
+      <TableCaption className="my-4">
+        문의는 <SMSLink>{csPhone}</SMSLink>로 문자 남겨주세요.
+      </TableCaption>
+      <TableHeader>
+        <ReservationTableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        {reservationArray.sort(sortReservationArrayByTimestamp).map((info, idx) => {
+          return <ReservationTableRow key={`reservation-${idx}`} info={info} />
+        })}
+      </TableBody>
+    </Table>
+  )
+}
+
+function ReservationTableHeaderRow() {
   return (
     <TableRow>
       <TableHead className="text-center">날짜</TableHead>
@@ -20,7 +42,7 @@ export function ReservationTableHeaderRow() {
 interface ReservationTableRowType {
   info: Reservation
 }
-export function ReservationTableRow({ info }: ReservationTableRowType): ReactNode {
+function ReservationTableRow({ info }: ReservationTableRowType): ReactNode {
   const { date, hour } = timestampToDate(info.timestamp)
   return (
     <TableRow>
@@ -54,4 +76,9 @@ function changePhoneString(phone: string): string {
   if (phone.includes('blog')) return '블로그 체험단'
   if (phone.includes('_won')) return '커플 데이트'
   return phone
+}
+
+function sortReservationArrayByTimestamp(a: Reservation, b: Reservation): number {
+  if (a.timestamp < b.timestamp) return -1
+  return 1
 }

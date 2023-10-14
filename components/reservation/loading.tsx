@@ -3,14 +3,14 @@ import { ReactNode } from 'react'
 import { SMSLink } from '@components/link'
 
 interface LoadingType {
-  cs_phone: string
+  csPhone: string
 }
-export function Loading({ cs_phone }: LoadingType): ReactNode {
+export function Loading({ csPhone }: LoadingType): ReactNode {
   return (
     <div className="text-center leading-8">
       <div>예약 정보를 불러오는 중</div>
       <div>
-        문의: <SMSLink>{cs_phone}</SMSLink>
+        문의: <SMSLink>{csPhone}</SMSLink>
       </div>
     </div>
   )
