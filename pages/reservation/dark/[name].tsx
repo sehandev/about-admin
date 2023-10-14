@@ -1,11 +1,12 @@
 import useSWR from 'swr'
 
 import { SMSLink } from '@components/link'
+import { Loading } from '@components/reservation/loading'
+import { ReservationTableHeaderRow, ReservationTableRow } from '@components/reservation/table'
 import { ThemeToggleButton } from '@components/theme-button'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@components/ui/table'
+import { Table, TableBody, TableCaption, TableHeader } from '@components/ui/table'
 import { getLogger } from '@libs/logger'
 import { getSWRManager } from '@libs/swr'
-import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
 const SAMPLE_CS_PHONE: string = '010-5140-7750'
@@ -27,12 +28,7 @@ export default function DarkReservation() {
         <h1 className="font-semibold text-2xl">{SAMPLE_DARK_NAME}</h1>
       </div>
       {isLoading ? (
-        <div className="text-center leading-8">
-          <div>예약 정보를 불러오는 중</div>
-          <div>
-            문의: <SMSLink>{SAMPLE_CS_PHONE}</SMSLink>
-          </div>
-        </div>
+        <Loading cs_phone={SAMPLE_CS_PHONE} />
       ) : (
         <>{reservationArray && <ReservationTable reservationArray={reservationArray} />}</>
       )}
@@ -52,51 +48,13 @@ const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[
         문의는 <SMSLink>{SAMPLE_CS_PHONE}</SMSLink>로 문자 남겨주세요.
       </TableCaption>
       <TableHeader>
-        <TableRow>
-          <TableHead className="text-center">날짜</TableHead>
-          <TableHead className="text-center">시간</TableHead>
-          <TableHead className="text-center">인원</TableHead>
-          <TableHead className="text-center">남성</TableHead>
-          <TableHead className="text-center">여성</TableHead>
-        </TableRow>
+        <ReservationTableHeaderRow />
       </TableHeader>
       <TableBody>
         {reservationArray.sort(sortReservationArrayByTimestamp).map((info, idx) => {
-          const { date, hour } = timestampToDate(info.timestamp)
-          return (
-            <TableRow key={`reservation-${idx}`}>
-              <TableCell className="text-center">{date}</TableCell>
-              <TableCell className="text-center">{hour}</TableCell>
-              <TableCell className="text-center">
-                {info.count}:{info.count}
-              </TableCell>
-              <TableCell className="text-center">
-                {info.phone.male.map((phone, idx) => (
-                  <div key={`male-sms-link-${idx}`}>
-                    <SMSLink>{changePhoneString(phone)}</SMSLink>
-                    <br />
-                  </div>
-                ))}
-              </TableCell>
-              <TableCell className="text-center">
-                {info.phone.female.map((phone, idx) => (
-                  <div key={`female-sms-link-${idx}`}>
-                    <SMSLink>{changePhoneString(phone)}</SMSLink>
-                    <br />
-                  </div>
-                ))}
-              </TableCell>
-            </TableRow>
-          )
+          return <ReservationTableRow key={`reservation-${idx}`} info={info} />
         })}
       </TableBody>
     </Table>
   )
-}
-
-function changePhoneString(phone: string): string {
-  if (phone.includes('_couple')) return phone.split('_couple')[0]
-  if (phone.includes('blog')) return '블로그 체험단'
-  if (phone.includes('_won')) return '커플 데이트'
-  return phone
 }
