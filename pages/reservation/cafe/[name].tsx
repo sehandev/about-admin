@@ -1,17 +1,14 @@
 import useSWR from 'swr'
 
-import { SMSLink } from '@components/link'
-import { ThemeToggleButton } from '@components/theme-button'
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from '@components/ui/table'
+import { ReservationMain } from '@components/reservation/main'
 import { getLogger } from '@libs/logger'
 import { getSWRManager } from '@libs/swr'
-import { timestampToDate } from '@libs/timestamp'
 import { Reservation } from '@type/reservation'
 
 const SAMPLE_CS_PHONE: string = '010-5397-8929'
 const SAMPLE_CAFE_NAME: string = 'CAFE_OGO'
 
-export default function CafeReservation() {
+export default function DarkReservation() {
   const logger = getLogger()
   const swrManager = getSWRManager()
   logger.log('CafeReservation', `visit`, { cafe_name: SAMPLE_CAFE_NAME })
@@ -21,75 +18,11 @@ export default function CafeReservation() {
   )
 
   return (
-    <main className="flex flex-col items-center justify-start min-h-screen sm:p-24 p-4">
-      <div className="flex flex-row items-center justify-center mb-4 gap-4">
-        <ThemeToggleButton />
-        <h1 className="font-semibold text-2xl">{SAMPLE_CAFE_NAME}</h1>
-      </div>
-      {isLoading ? (
-        <div className="text-center leading-8">
-          <div>예약 정보를 불러오는 중</div>
-          <div>
-            문의: <SMSLink>{SAMPLE_CS_PHONE}</SMSLink>
-          </div>
-        </div>
-      ) : (
-        <>{reservationArray && <ReservationTable reservationArray={reservationArray} />}</>
-      )}
-    </main>
-  )
-}
-
-const ReservationTable = ({ reservationArray }: { reservationArray: Reservation[] }) => {
-  function sortReservationArrayByTimestamp(a: Reservation, b: Reservation): number {
-    if (a.timestamp < b.timestamp) return -1
-    return 1
-  }
-
-  return (
-    <Table className="mx-auto min-w-max w-fit">
-      <TableCaption className="my-4">
-        문의는 <SMSLink>{SAMPLE_CS_PHONE}</SMSLink>로 문자 남겨주세요.
-      </TableCaption>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="text-center">날짜</TableHead>
-          <TableHead className="text-center">시간</TableHead>
-          <TableHead className="text-center">인원</TableHead>
-          <TableHead className="text-center">남성</TableHead>
-          <TableHead className="text-center">여성</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {reservationArray.sort(sortReservationArrayByTimestamp).map((info, idx) => {
-          const { date, hour } = timestampToDate(info.timestamp)
-          return (
-            <TableRow key={`reservation-${idx}`}>
-              <TableCell className="text-center">{date}</TableCell>
-              <TableCell className="text-center">{hour}</TableCell>
-              <TableCell className="text-center">
-                {info.count}:{info.count}
-              </TableCell>
-              <TableCell className="text-center">
-                {info.phone.male.map((phone, idx) => (
-                  <>
-                    <SMSLink key={`male-sms-link-${idx}`}>{phone}</SMSLink>
-                    <br />
-                  </>
-                ))}
-              </TableCell>
-              <TableCell className="text-center">
-                {info.phone.female.map((phone, idx) => (
-                  <>
-                    <SMSLink key={`female-sms-link-${idx}`}>{phone}</SMSLink>
-                    <br />
-                  </>
-                ))}
-              </TableCell>
-            </TableRow>
-          )
-        })}
-      </TableBody>
-    </Table>
+    <ReservationMain
+      csPhone={SAMPLE_CS_PHONE}
+      reservationArray={reservationArray}
+      locationName={SAMPLE_CAFE_NAME}
+      isLoading={isLoading}
+    />
   )
 }
